@@ -1,8 +1,13 @@
 
 echo "Welcome to Lab4"
 
+if [ $# -ne 5 ]
+then
+echo "5 mandatory parameters \"AMI ID, key-name, security-group, launch-configuration and count \" needs to be passed in the same order"
+
+else
 echo "Creating 3 new instances"
-aws ec2 run-instances --image-id $1 --key-name deepak --security-group-ids sg-ce71b8b7 --instance-type t2.micro --user-data file://installapp.sh --count 3 --placement AvailabilityZone=us-west-2a
+aws ec2 run-instances --image-id $1 --key-name $2 --security-group-ids $3 --instance-type t2.micro --user-data file://installapp.sh --count $5 --placement AvailabilityZone=us-west-2a
 echo "New Instance creation completed"
 
 echo "Wait untill the Instance is moved to Running State"
@@ -20,11 +25,11 @@ aws elb register-instances-with-load-balancer --load-balancer-name itmo-544 --in
 echo "Instances are registered to load balancer successfully"
 
 echo "Creating Autoscaling Launch Configuration"
-aws autoscaling create-launch-configuration --launch-configuration-name webserver --image-id $1 --key-name deepak --instance-type t2.micro --user-data file://installapp.sh
+aws autoscaling create-launch-configuration --launch-configuration-name $4 --image-id $1 --key-name $2 --instance-type t2.micro --user-data file://installapp.sh
 echo "Autoscaling Launch Configuration created successfully"
 
 echo "Creating Autoscaling Group"
-aws autoscaling create-auto-scaling-group --auto-scaling-group-name webserverdemo --launch-configuration webserver --availability-zone us-west-2a --max-size 5 --min-size 0 --desired-capacity 1
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name webserverdemo --launch-configuration $4 --availability-zone us-west-2a --max-size 5 --min-size 0 --desired-capacity 1
 echo "AutoScaling Group Created Successfully"
 
 echo "Attaching created instances to auto scaling group"
@@ -36,3 +41,4 @@ aws autoscaling attach-load-balancers --auto-scaling-group-name webserverdemo --
 echo "load balancer attached to auto-scaling-group successfully"
 
 echo "Lab4 completed successfully"
+fi
