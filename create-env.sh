@@ -3,10 +3,10 @@ echo "Welcome to Lab4"
 
 if [ $# -ne 5 ]
 then
-echo "5 mandatory parameters \"AMI ID, key-name, security-group, launch-configuration and count \" needs to be passed in the same order"
+echo "5 mandatory parameters \"AMI ID, key-name, security-group, launch-configuration and count \" should to be passed in the same order"
 
 else
-echo "Creating 3 new instances"
+echo "Creating new instances"
 aws ec2 run-instances --image-id $1 --key-name $2 --security-group-ids $3 --instance-type t2.micro --user-data file://installapp.sh --count $5 --placement AvailabilityZone=us-west-2a
 echo "New Instance creation completed"
 
